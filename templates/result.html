@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson's Assessment Results</title>
+    <!-- Bootstrap CSS (Replit theme) -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="bg-dark py-3">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-brain fa-3x me-3 text-info"></i>
+                <div>
+                    <h1 class="display-5">Assessment Results</h1>
+                    <p class="lead">Analysis of your Parkinson's Disease screening</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <!-- Alert for important disclaimer -->
+        <div class="alert alert-warning mb-4">
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Medical Disclaimer</h4>
+            <p>This is a screening tool only and not a medical diagnosis. The results should be discussed with a healthcare professional.</p>
+            <hr>
+            <p class="mb-0">These results are based on computer analysis and should not replace consultation with a neurologist or other qualified healthcare provider.</p>
+        </div>
+
+        <!-- Overall Risk Assessment -->
+        <div class="card mb-5">
+            <div class="card-header bg-primary">
+                <h2 class="mb-0 text-white">Overall Risk Assessment</h2>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center">
+                        <div class="display-1 mb-3">
+                            <i class="fas fa-chart-pie text-{{ results.risk_level.class }}"></i>
+                        </div>
+                        <h3 class="text-{{ results.risk_level.class }}">{{ results.risk_level.level }} Risk</h3>
+                    </div>
+                    <div class="col-md-8">
+                        <h4>Combined Probability: {{ "%.1f"|format(results.combined_probability * 100) }}%</h4>
+                        <div class="progress mb-4" style="height: 30px;">
+                            <div class="progress-bar bg-{{ results.risk_level.class }}" 
+                                 role="progressbar" 
+                                 style="width: {{ results.combined_probability * 100 }}%;" 
+                                 aria-valuenow="{{ results.combined_probability * 100 }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ "%.1f"|format(results.combined_probability * 100) }}%
+                            </div>
+                        </div>
+                        
+                        <p class="lead">
+                            {% if results.risk_level.level == "Low" %}
+                                Your assessment suggests a low likelihood of Parkinson's Disease based on the analyzed inputs.
+                            {% elif results.risk_level.level == "Moderate" %}
+                                Your assessment suggests a moderate likelihood of Parkinson's Disease. We recommend discussing these results with a healthcare provider.
+                            {% else %}
+                                Your assessment suggests a higher likelihood of Parkinson's Disease. We strongly recommend consulting with a neurologist to discuss these results.
+                            {% endif %}
+                            
+                            {% if results.urgent_consultation %}
+                                <div class="alert alert-danger mt-3">
+                                    <strong><i class="fas fa-exclamation-circle me-2"></i>URGENT:</strong> 
+                                    Based on your responses, we recommend consulting a doctor immediately.
+                                </div>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Results Section -->
+        <h2 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Detailed Analysis Results</h2>
+        
+        <div class="row">
+            <!-- Spiral Drawing Results -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 result-card">
+                    <div class="card-header bg-info">
+                        <h3 class="mb-0"><i class="fas fa-draw-polygon me-2"></i>Spiral Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>Result: {{ results.spiral.result }}</h4>
+                        <div class="progress mb-3">
+                            <div class="progress-bar 
+                                    {% if results.spiral.confidence < 0.3 %}
+                                        bg-success
+                                    {% elif results.spiral.confidence < 0.6 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-danger
+                                    {% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ results.spiral.confidence * 100 }}%;" 
+                                 aria-valuenow="{{ results.spiral.confidence * 100 }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ "%.1f"|format(results.spiral.confidence * 100) }}%
+                            </div>
+                        </div>
+                        <p>Weight in final assessment: {{ "%.0f"|format(results.spiral.weight * 100) }}%</p>
+                        <p>
+                            {% if results.spiral.result == "Negative" %}
+                                No significant tremor patterns detected in your spiral drawing.
+                            {% elif results.spiral.result == "Borderline" %}
+                                Some mild irregularities detected in your spiral drawing.
+                            {% else %}
+                                Tremor patterns detected in your spiral drawing that may be associated with Parkinson's.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MRI Results (if provided) -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 result-card">
+                    <div class="card-header bg-info">
+                        <h3 class="mb-0"><i class="fas fa-brain me-2"></i>MRI Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if results.mri.result %}
+                            <h4>Result: {{ results.mri.result }}</h4>
+                            <div class="progress mb-3">
+                                <div class="progress-bar 
+                                        {% if results.mri.confidence < 0.3 %}
+                                            bg-success
+                                        {% elif results.mri.confidence < 0.6 %}
+                                            bg-warning
+                                        {% else %}
+                                            bg-danger
+                                        {% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ results.mri.confidence * 100 }}%;" 
+                                     aria-valuenow="{{ results.mri.confidence * 100 }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    {{ "%.1f"|format(results.mri.confidence * 100) }}%
+                                </div>
+                            </div>
+                            <p>Weight in final assessment: {{ "%.0f"|format(results.mri.weight * 100) }}%</p>
+                            <p>
+                                {% if results.mri.result == "Negative" %}
+                                    No significant abnormalities detected in the MRI scan.
+                                {% elif results.mri.result == "Borderline" %}
+                                    Some mild abnormalities detected in the MRI scan.
+                                {% else %}
+                                    Abnormalities detected in the MRI scan that may be associated with Parkinson's.
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-image-slash fa-3x mb-3 text-secondary"></i>
+                                <h4>No MRI Provided</h4>
+                                <p>MRI analysis was not included in this assessment.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Symptom Questionnaire Results -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 result-card">
+                    <div class="card-header bg-info">
+                        <h3 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Symptom Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>Result: {{ results.symptoms.result }}</h4>
+                        <div class="progress mb-3">
+                            <div class="progress-bar 
+                                    {% if results.symptoms.confidence < 0.3 %}
+                                        bg-success
+                                    {% elif results.symptoms.confidence < 0.6 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-danger
+                                    {% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ results.symptoms.confidence * 100 }}%;" 
+                                 aria-valuenow="{{ results.symptoms.confidence * 100 }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ "%.1f"|format(results.symptoms.confidence * 100) }}%
+                            </div>
+                        </div>
+                        <p>Weight in final assessment: {{ "%.0f"|format(results.symptoms.weight * 100) }}%</p>
+                        <p>
+                            {% if results.symptoms.result == "Negative" %}
+                                Your symptom profile shows minimal indicators associated with Parkinson's.
+                            {% elif results.symptoms.result == "Borderline" %}
+                                Your symptom profile shows some indicators that may be associated with Parkinson's.
+                            {% else %}
+                                Your symptom profile shows multiple indicators commonly associated with Parkinson's.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps & Resources -->
+        <div class="card mt-4">
+            <div class="card-header bg-secondary">
+                <h3 class="mb-0">Recommended Next Steps</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4><i class="fas fa-stethoscope me-2"></i>Medical Consultation</h4>
+                        <ul>
+                            {% if results.risk_level.level == "Low" %}
+                                <li>Continue regular check-ups with your primary care physician</li>
+                                <li>Monitor for any changes in symptoms over time</li>
+                            {% elif results.risk_level.level == "Moderate" %}
+                                <li>Schedule an appointment with your primary care physician</li>
+                                <li>Consider requesting a referral to a neurologist</li>
+                            {% else %}
+                                <li>Schedule an appointment with a neurologist specialized in movement disorders</li>
+                                <li>Bring these results to your appointment</li>
+                                <li>Consider additional diagnostic testing</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h4><i class="fas fa-book-medical me-2"></i>Educational Resources</h4>
+                        <ul>
+                            <li><a href="https://www.michaeljfox.org/" target="_blank">Michael J. Fox Foundation</a></li>
+                            <li><a href="https://www.parkinson.org/" target="_blank">Parkinson's Foundation</a></li>
+                            <li><a href="https://www.ninds.nih.gov/health-information/disorders/parkinsons-disease" target="_blank">National Institute of Neurological Disorders and Stroke</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Disclaimer -->
+        <div class="disclaimer mt-5">
+            <h4><i class="fas fa-info-circle me-2"></i>Important Information</h4>
+            <p>This assessment tool uses computer algorithms to analyze inputs and provide a screening assessment. It is not a diagnostic tool and should not replace professional medical advice, diagnosis, or treatment.</p>
+            <p>The algorithms used have limitations and may produce false positive or false negative results. Only a qualified healthcare professional can diagnose Parkinson's Disease.</p>
+        </div>
+        
+        <div class="d-grid gap-2 col-md-6 mx-auto mt-5">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-redo me-2"></i>Start New Assessment
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Parkinson's Disease Early Detection Tool</h5>
+                    <p>A screening tool to help detect early signs of Parkinson's Disease</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>This application is for educational and screening purposes only.</p>
+                    <p>Always consult with a healthcare professional for medical advice.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <title>MRI Brain Scan Example</title>
+  <desc>An illustrative example of a brain MRI scan</desc>
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="200" height="200" fill="#f0f0f0" />
+  
+  <!-- Outer skull outline -->
+  <ellipse cx="100" cy="100" rx="80" ry="90" fill="none" stroke="#555555" stroke-width="3" />
+  
+  <!-- Brain outline -->
+  <path d="M 50,80 
+           C 60,40 140,40 150,80
+           C 160,120 140,160 100,170
+           C 60,160 40,120 50,80 Z" 
+        fill="none" stroke="#444444" stroke-width="2" />
+  
+  <!-- Brain details - corpus callosum -->
+  <path d="M 70,100 C 90,95 110,95 130,100" 
+        fill="none" stroke="#333333" stroke-width="1.5" />
+  
+  <!-- Ventricles -->
+  <path d="M 90,110 C 80,115 90,130 100,125 C 110,130 120,115 110,110 Z"
+        fill="none" stroke="#222222" stroke-width="1" />
+  
+  <!-- Cerebellum -->
+  <path d="M 80,150 C 95,160 105,160 120,150"
+        fill="none" stroke="#333333" stroke-width="1.5" />
+  
+  <!-- Brainstem -->
+  <path d="M 100,150 L 100,170"
+        fill="none" stroke="#333333" stroke-width="2" />
+  
+  <!-- Text label -->
+  <text x="35" y="20" font-family="Arial" font-size="12" fill="#333333">Example MRI Scan</text>
+</svg>

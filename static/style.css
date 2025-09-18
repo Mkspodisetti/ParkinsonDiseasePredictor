@@ -1,0 +1,86 @@
+/* Additional custom styles beyond Bootstrap */
+
+.spiral-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.results-section {
+    padding: 30px 0;
+}
+
+.result-card {
+    transition: transform 0.3s;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+}
+
+.disclaimer {
+    font-style: italic;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    background-color: var(--bs-secondary-bg);
+}
+
+.progress {
+    height: 25px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h3 {
+    margin-bottom: 20px;
+}
+
+.file-upload {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.file-upload-label {
+    border: 1px dashed var(--bs-border-color);
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.file-upload-label:hover {
+    background-color: var(--bs-secondary-bg);
+}
+
+.file-preview {
+    max-width: 100%;
+    max-height: 200px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.question-item {
+    margin-bottom: 15px;
+}
+
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+    border-top: 1px solid var(--bs-border-color);
+}

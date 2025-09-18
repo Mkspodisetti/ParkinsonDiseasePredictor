@@ -1,0 +1,33 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <title>Example Spiral Drawing</title>
+  <desc>A simple spiral drawing example for Parkinson's Disease screening</desc>
+  
+  <!-- Outer circle guide -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="#cccccc" stroke-width="1" stroke-dasharray="5,5" />
+  
+  <!-- Inner circle guide -->
+  <circle cx="100" cy="100" r="10" fill="none" stroke="#cccccc" stroke-width="1" />
+  
+  <!-- Spiral path -->
+  <path d="M 100,100 
+           Q 105,100 105,95 
+           T 110,85 
+           Q 115,80 120,80 
+           T 130,75 
+           Q 140,75 145,80 
+           T 155,90 
+           Q 160,100 155,110 
+           T 140,125 
+           Q 125,130 110,125 
+           T 85,105 
+           Q 75,85 85,70 
+           T 110,50 
+           Q 135,45 155,60 
+           T 175,100 
+           Q 180,130 160,155 
+           T 105,185"
+        fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" />
+  
+  <!-- Text label -->
+  <text x="50" y="20" font-family="Arial" font-size="12" fill="#333333">Example Spiral Drawing</text>
+</svg>
